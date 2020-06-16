@@ -12,50 +12,53 @@ public class managerClass implements Runnable {
   }
 
   public void run() {
-	  	int toOpenStore = 8;
 	  	int onLine;
-	  //	toOpenStore = (int) (Math.random() * (10 - 6)) + 6;
-	  	/*
+	  	int toOpenStore = (int) (Math.random() * (10 - 6)) + 6; //randomly decides to open the store between 6-10 customers get on the line
+	  	
 	  	while(storeClass.currentCustomers != toOpenStore) {}//BW
 	  	openStore();
-	  	onLine = storeClass.customerLine.size();
-	  	while(storeClass.customersServed < storeClass.maxCustomers && storeClass.inStore == 0) {
-	  		if(onLine < storeClass.storeCap) {
-	  			for(int i = 1; i <= onLine; i++) {
-	  				storeClass.customerLine.poll().isAllowedInside = true;
-	  			}
-	  		}
-	  		else {
-	  			for(int i = 1; i <= 6; i++) {
-	  				storeClass.customerLine.poll().isAllowedInside = true;
-	  			}
+	  	onLine = storeClass.storeLine.size();
+	  	while(storeClass.customersServed < storeClass.maxCustomers) { 
+	  		if(storeClass.inStore == 0) {
+	  			if(onLine < storeClass.storeCap) {
+	  				System.out.println("Manager lets in "+onLine);
+		  			for(int i = 1; i <= onLine; i++) {
+		  				storeClass.storeLine.poll().isAllowedInside = true;
+		  				storeClass.inStore++;
+		  				try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+		  			}
+		  		}
+		  		else {
+		  			System.out.println("Manager lets in 6");
+		  			for(int i = 1; i <= 6; i++) {
+		  				storeClass.storeLine.poll().isAllowedInside = true;
+		  				storeClass.inStore++;
+		  				try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+		  			}
+		  		}
 	  		}
 	  	}
-	  	*/
-	  	while(storeClass.currentCustomers != toOpenStore) {}//BW
-	  	openStore();
-	  		System.out.println("manager lets in 6");
-		  	for(int i = 1; i <= 6; i++) {
-					storeClass.customerLine.poll().allowInside();
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-			}
-		  //	System.out.println(storeClass.customerLine.size());
-	  	//closeStore();
-  
-  
-  
-  
   }
   
   public void openStore() {
 	  storeClass.isStoreOpen = true;
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	  System.out.println("The store has been opened!");
-	  
   }
   
   public void closeStore() {
