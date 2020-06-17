@@ -1,20 +1,26 @@
 import java.util.LinkedList; 
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class storeClass {
  
   volatile public static Queue<customerClass> storeLine = new LinkedList<>();
   volatile public static LinkedList<customerClass> checkoutLine = new LinkedList<customerClass>();
-  volatile public static int checkoutLineSize = checkoutLine.size();
-  volatile public static boolean checkingLine = false;
-  volatile public static boolean isStoreOpen = false; 
-  volatile public static  int inStore = 0;
-  volatile public static int currentCustomers = 0;
-  volatile public static int maxCustomers = 20;
+  volatile public static AtomicInteger checkoutLineSize = new AtomicInteger(checkoutLine.size());
+  volatile public static AtomicBoolean isStoreOpen = new AtomicBoolean(false); 
+  volatile public static  AtomicInteger inStore = new AtomicInteger(0);
+  volatile public static AtomicInteger currentCustomers = new AtomicInteger(0);
+  volatile public static AtomicInteger maxCustomers = new AtomicInteger(20);
   volatile public static int storeCap = 6;
-  volatile public static int customersServed = 0;
+  volatile public static AtomicInteger customersServed = new AtomicInteger(0);
   private static int ID = 1;
+  volatile static AtomicBoolean register1 = new AtomicBoolean(false);
+  volatile static AtomicBoolean register3 = new AtomicBoolean(false);
+  volatile static AtomicInteger busyRegisters = new AtomicInteger(0);
+  
+  
   
   public static void main(String[] args) throws InterruptedException {
 	  //starts the manager and employee thread
@@ -24,7 +30,7 @@ public class storeClass {
 	  employee.start();
 	  customerClass customer;
 	  
-	  while(currentCustomers < maxCustomers) {
+	  while(currentCustomers.get() < maxCustomers.get()) {
 		  //customers arrive every 1-10 seconds and join the line outside 
 		  Thread.sleep((int) (Math.random() * (10000 - 1000)) + 1000); //(high - low) + low in ms
 		  if((int) (Math.random() * (4 - 1)) + 1 == 1){
@@ -36,7 +42,7 @@ public class storeClass {
 		  storeLine.add(customer);
 		  customer.start();
 		  ID++;
-		  currentCustomers++;
+		  currentCustomers.getAndIncrement();
 	  }
 	 
 

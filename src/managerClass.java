@@ -15,16 +15,17 @@ public class managerClass implements Runnable {
 	  	int onLine;
 	  	int toOpenStore = (int) (Math.random() * (10 - 6)) + 6; //randomly decides to open the store between 6-10 customers get on the line
 	  	
-	  	while(storeClass.currentCustomers != toOpenStore) {}//BW
+	  	while(storeClass.currentCustomers.get() != toOpenStore) {}//BW
 	  	openStore();
-	  	onLine = storeClass.storeLine.size();
-	  	while(storeClass.customersServed < storeClass.maxCustomers) { 
-	  		if(storeClass.inStore == 0) {
+	  	while(storeClass.customersServed.get() < storeClass.maxCustomers.get()) { 
+	  		onLine = storeClass.storeLine.size();
+	  		if(storeClass.inStore.get() == 0) {
 	  			if(onLine < storeClass.storeCap) {
+	  				if(onLine == 0) continue;
 	  				System.out.println("Manager lets in "+onLine);
 		  			for(int i = 1; i <= onLine; i++) {
-		  				storeClass.storeLine.poll().isAllowedInside = true;
-		  				storeClass.inStore++;
+		  				storeClass.storeLine.poll().isAllowedInside.set(true);
+		  				storeClass.inStore.getAndIncrement();
 		  				try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
@@ -36,8 +37,8 @@ public class managerClass implements Runnable {
 		  		else {
 		  			System.out.println("Manager lets in 6");
 		  			for(int i = 1; i <= 6; i++) {
-		  				storeClass.storeLine.poll().isAllowedInside = true;
-		  				storeClass.inStore++;
+		  				storeClass.storeLine.poll().isAllowedInside.set(true);
+		  				storeClass.inStore.getAndIncrement();
 		  				try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
@@ -48,10 +49,11 @@ public class managerClass implements Runnable {
 		  		}
 	  		}
 	  	}
+	  	System.out.println("Manager is done for the day");
   }
   
   public void openStore() {
-	  storeClass.isStoreOpen = true;
+	  storeClass.isStoreOpen.set(true);
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
@@ -62,7 +64,7 @@ public class managerClass implements Runnable {
   }
   
   public void closeStore() {
-	  storeClass.isStoreOpen = false;
+	  storeClass.isStoreOpen.set(false);
 	  System.out.println("The store has been closed!");
 	  
   }
