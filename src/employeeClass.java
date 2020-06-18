@@ -2,8 +2,10 @@ public class employeeClass implements Runnable {
 
   private Thread thread;
 
+
   public employeeClass() {
 	  this.thread = new Thread(this);
+	
   }
 
   public void start() {
@@ -24,10 +26,9 @@ public class employeeClass implements Runnable {
 					  try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					  System.out.println("Customer-"+checkoutCustomer.ID+" is sent to register 1");
+					  msg("Customer-"+checkoutCustomer.ID+" is sent to register 1");
 				  }
 				  else if(storeClass.register3.get() == false) {
 					  storeClass.register3.set(true);
@@ -35,53 +36,68 @@ public class employeeClass implements Runnable {
 					  checkoutCustomer = storeClass.checkoutLine.removeLast();
 					  checkoutCustomer.allowedToRegister.set(true);
 					  checkoutCustomer.sentRegister.set(2);
-					  System.out.println("Customer-"+checkoutCustomer.ID+" is sent to register 3");
+					  msg("Customer-"+checkoutCustomer.ID+" is sent to register 3");
 				  }
 			  }
 		  }
 	  }
 	  closeStore();
-	  storeClass.helpCustomers.set(true);
-	  /*
-	  customerClass customerCar;
 	  for(int i = 0; i<storeClass.maxCustomers.get(); i++) {
-		  customerCar = storeClass.parkingLotLine[i];
-		  if(customerCar.t.isAlive()) {
-			  customerCar.t.interrupt();
+		  if(storeClass.parkingLotLine[i].thread.isAlive()) {
+			  storeClass.parkingLotLine[i].thread.interrupt();
 			  try {
-				customerCar.t.join();
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			  
 		  }
 	  }
-	  
+	  for(int i = 0; i<storeClass.maxCustomers.get(); i++) {
+		  try {
+			  storeClass.parkingLotLine[i].canLeave.set(true);
+			  storeClass.parkingLotLine[i].thread.join();
+		  } catch (InterruptedException e) {
+			e.printStackTrace();
+		  }
+		  try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+	  }
 	  employeeLeaves();
-	  */
+	  
   }
 
   private void employeeLeaves() {
-	System.out.println("Employee leaves the parking lot");
+	msg("Employee leaves the parking lot");
 	
 }
 
-private void closeStore() {
+  private void closeStore() {
 	  try {
 		Thread.sleep(1000);
 	} catch (InterruptedException e1) {
-		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	}
-	  System.out.println("Closing store...");
+	 msg("Closing store...");
 	  try {
-			Thread.sleep((long) (Math.random() * (10000 - 5000)) + 5000);
+			Thread.sleep((long) (Math.random() * (15000 - 10000)) + 10000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	  	storeClass.isStoreOpen.set(false);
-	    System.out.println("Employee has closed the store for the day and walks outside to the chaos to wake up customers");
+	   msg("Employee has closed the store for the day and walks outside to the chaos to wake up customers");
+	    try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
   }
+  
+  public void msg(String m) {
+		System.out.println("["+(System.currentTimeMillis()-storeClass.time)+"] "+thread.getName()+": "+m);
+	}
 }

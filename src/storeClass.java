@@ -3,28 +3,27 @@ import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
-
 public class storeClass {
-  volatile public static AtomicInteger maxCustomers = new AtomicInteger(6);
+  volatile public static AtomicInteger maxCustomers;
   volatile public static int storeCap = 6;
   volatile public static Queue<customerClass> storeLine = new LinkedList<>();
   volatile public static LinkedList<customerClass> checkoutLine = new LinkedList<customerClass>();
-  volatile public static customerClass[] parkingLotLine = new customerClass[maxCustomers.get()];
+  volatile public static customerClass[] parkingLotLine; 
   volatile public static AtomicInteger checkoutLineSize = new AtomicInteger(checkoutLine.size());
   volatile public static AtomicBoolean isStoreOpen = new AtomicBoolean(false); 
   volatile public static  AtomicInteger inStore = new AtomicInteger(0);
   volatile public static AtomicInteger  currentCustomers = new AtomicInteger(0);
   volatile public static AtomicInteger customersServed = new AtomicInteger(0);
-  private static int ID = 1;
   volatile public static AtomicBoolean register1 = new AtomicBoolean(false);
   volatile public static AtomicBoolean register3 = new AtomicBoolean(false);
   volatile public static AtomicInteger busyRegisters = new AtomicInteger(0);
-  volatile public static AtomicBoolean helpCustomers = new AtomicBoolean(false);
-  
-  
-  
+  private static int ID = 1;
+  public static long time; 
+
   public static void main(String[] args) throws InterruptedException {
+	  maxCustomers = new AtomicInteger(Integer.parseInt(args[0]));
+	  parkingLotLine = new customerClass[maxCustomers.get()];
+	  time = System.currentTimeMillis();
 	  //starts the manager and employee thread
 	  managerClass manager = new managerClass();
 	  manager.start();
@@ -45,10 +44,6 @@ public class storeClass {
 		  customer.start();
 		  ID++;
 		  currentCustomers.getAndIncrement();
-	  }
-	  while(helpCustomers.get() == false) {}
-	  parkingLotLine[0].interruptCar();
-	  
-    
+	  }    
   }
 }
