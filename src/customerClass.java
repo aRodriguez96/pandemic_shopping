@@ -3,14 +3,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class customerClass implements Runnable {
 
-  public String ID;
+
+public String ID;
   private Thread thread;
   volatile public AtomicBoolean isAllowedInside = new AtomicBoolean(false);
   volatile public AtomicBoolean allowedToRegister = new AtomicBoolean(false);
   public AtomicBoolean isElderly = new AtomicBoolean(false);
   volatile public AtomicInteger yieldsLeft = new AtomicInteger(2);
   volatile public AtomicInteger sentRegister = new AtomicInteger(0);
-
+  public Thread t = Thread.currentThread();
   
   public customerClass(String num, boolean elderly) {
     this.ID = num;
@@ -80,7 +81,16 @@ public class customerClass implements Runnable {
 	 storeClass.busyRegisters.getAndDecrement();
 	 storeClass.inStore.getAndDecrement();
 	 storeClass.customersServed.getAndIncrement();
-	 System.out.println("Customer-"+this.ID+" leaves the store");
+	 System.out.println("Customer-"+this.ID+" leaves the store and goes to their car");
+	 storeClass.parkingLotLine[Integer.parseInt(this.ID)-1] = this;
+	 try {
+			Thread.sleep(1000000000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Customer-"+this.ID+" is woken up and leaves the parking lot");
+		}
+	    
+	 
   }
   
 
@@ -111,5 +121,30 @@ public class customerClass implements Runnable {
 	public void yieldToElderly() {
 		Thread.yield();
 	}
+/*
+	public boolean checkIfAlive() {
+		if(t.isAlive()) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	*/
+	public void interruptCar() {
+		this.t.interrupt();
+		
+	}
+	/*
+	public void joinThread() {
+		try {
+			t.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	*/
 
 }

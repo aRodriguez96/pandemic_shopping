@@ -41,24 +41,47 @@ public class employeeClass implements Runnable {
 		  }
 	  }
 	  closeStore();
+	  storeClass.helpCustomers.set(true);
+	  /*
+	  customerClass customerCar;
+	  for(int i = 0; i<storeClass.maxCustomers.get(); i++) {
+		  customerCar = storeClass.parkingLotLine[i];
+		  if(customerCar.t.isAlive()) {
+			  customerCar.t.interrupt();
+			  try {
+				customerCar.t.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  }
+	  }
+	  
+	  employeeLeaves();
+	  */
   }
 
-  private void closeStore() {
+  private void employeeLeaves() {
+	System.out.println("Employee leaves the parking lot");
+	
+}
+
+private void closeStore() {
 	  try {
 		Thread.sleep(1000);
 	} catch (InterruptedException e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	}
-	  System.out.println("Closing store");
+	  System.out.println("Closing store...");
 	  try {
-			Thread.sleep((long) (Math.random() * (20000 - 10000)) + 10000);
+			Thread.sleep((long) (Math.random() * (10000 - 5000)) + 5000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	  	storeClass.isStoreOpen.set(false);
-	    System.out.println("Employee has closed the store for the day");
+	    System.out.println("Employee has closed the store for the day and walks outside to the chaos to wake up customers");
 
   }
 }

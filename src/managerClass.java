@@ -13,7 +13,7 @@ public class managerClass implements Runnable {
 
   public void run() {
 	  	int onLine;
-	  	int toOpenStore = (int) (Math.random() * (10 - 6)) + 6; //randomly decides to open the store between 6-10 customers get on the line
+	  	int toOpenStore = 6;//(int) (Math.random() * (10 - 6)) + 6; //randomly decides to open the store between 6-10 customers get on the line
 	  	
 	  	while(storeClass.currentCustomers.get() != toOpenStore) {}//BW
 	  	openStore();

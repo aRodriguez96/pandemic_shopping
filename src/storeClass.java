@@ -4,21 +4,23 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
+
 public class storeClass {
- 
+  volatile public static AtomicInteger maxCustomers = new AtomicInteger(6);
+  volatile public static int storeCap = 6;
   volatile public static Queue<customerClass> storeLine = new LinkedList<>();
   volatile public static LinkedList<customerClass> checkoutLine = new LinkedList<customerClass>();
+  volatile public static customerClass[] parkingLotLine = new customerClass[maxCustomers.get()];
   volatile public static AtomicInteger checkoutLineSize = new AtomicInteger(checkoutLine.size());
   volatile public static AtomicBoolean isStoreOpen = new AtomicBoolean(false); 
   volatile public static  AtomicInteger inStore = new AtomicInteger(0);
-  volatile public static AtomicInteger currentCustomers = new AtomicInteger(0);
-  volatile public static AtomicInteger maxCustomers = new AtomicInteger(20);
-  volatile public static int storeCap = 6;
+  volatile public static AtomicInteger  currentCustomers = new AtomicInteger(0);
   volatile public static AtomicInteger customersServed = new AtomicInteger(0);
   private static int ID = 1;
-  volatile static AtomicBoolean register1 = new AtomicBoolean(false);
-  volatile static AtomicBoolean register3 = new AtomicBoolean(false);
-  volatile static AtomicInteger busyRegisters = new AtomicInteger(0);
+  volatile public static AtomicBoolean register1 = new AtomicBoolean(false);
+  volatile public static AtomicBoolean register3 = new AtomicBoolean(false);
+  volatile public static AtomicInteger busyRegisters = new AtomicInteger(0);
+  volatile public static AtomicBoolean helpCustomers = new AtomicBoolean(false);
   
   
   
@@ -44,8 +46,9 @@ public class storeClass {
 		  ID++;
 		  currentCustomers.getAndIncrement();
 	  }
-	 
-
+	  while(helpCustomers.get() == false) {}
+	  parkingLotLine[0].interruptCar();
+	  
     
   }
 }
